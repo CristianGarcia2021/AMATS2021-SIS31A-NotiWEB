@@ -7,9 +7,6 @@ function Headerb ()
 <header class="main-header">
 
     
-    <a href="index.php" class="logo">
-    
-      <span class="logo-lg"><b>RED</b>SOCIAL</span>
     </a>
 
     
@@ -19,10 +16,7 @@ function Headerb ()
         <ul class="nav navbar-nav">
 
           
-          <?php
-          $noti = mysql_query("SELECT * FROM notificaciones WHERE user2 = '".$_SESSION['id']."' AND leido = '0' ORDER BY id_not desc");
-          $cuantas = mysql_num_rows($noti);
-          ?>
+     
 
           <!-- Notifications: style can be found in dropdown.less -->
           <li class="dropdown notifications-menu">
