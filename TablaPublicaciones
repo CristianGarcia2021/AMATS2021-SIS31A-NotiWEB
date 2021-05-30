@@ -1,0 +1,10 @@
+CREATE TABLE `publicaciones` (
+  `id_pub` int(11) NOT NULL,
+  `usuario` int(11) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `contenido` text NOT NULL,
+  `imagen` int(11) NOT NULL,
+  `album` int(11) NOT NULL,
+  `comentarios` int(11) NOT NULL,
+  `likes` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
