@@ -1,7 +1,7 @@
 <?php
 
 $username = "root";
-    $password = "sqlserver20@";
+    $password= ""
     $server = "localhost";
     $con = mysqli_connect($server, $username, $password) or die("Error al conectar a la base de datos".mysql_error());
 
