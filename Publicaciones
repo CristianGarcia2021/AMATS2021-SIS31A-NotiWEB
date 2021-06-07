@@ -1,1 +1,59 @@
-<p>hela este es el sistema de ublicaciones</p>
+<?php
+require "Conect/conectar.php";
+error_reporting(0);
+?>
+
+<?php
+  $CantidadMostrar=5;
+  $compag = (int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
+	$TotalReg = mysqli_query($con,"SELECT * FROM publicaciones");
+	$totalr = mysqli_num_rows($TotalReg);
+	$TotalRegistro  =ceil($totalr/$CantidadMostrar);
+	$IncrimentNum =(($compag +1)<=$TotalRegistro)?($compag +1):0;
+
+	$consultavistas = "SELECT * FROM publicaciones	ORDER BY id_pub DESC LIMIT ".(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
+
+  $consulta=mysqli_query($con,$consultavistas);
+	while ($lista=mysqli_fetch_array($consulta)) {
+
+		$userid = $lista['usuario'];
+
+		$usuariob = mysqli_query($con,"SELECT * FROM usuarios WHERE id_use = '$userid'");
+    $use = mysqli_fetch_array($usuariob);
+
+    $fotos = mysqli_query($con,"SELECT * FROM imagenes WHERE publicaciones = '$lista[id_pub]'");
+    $fot = mysqli_fetch_array($fotos);
+	?>
+          <div class="box box-widget">
+            <div class="box-header with-border">
+              <div class="user-block">
+                <img class="img-circle" src="Perfil/<?php echo $use['imagen']; ?>" alt="User Image">
+                <span class="description" onclick="location.href='perfil.php?id=<?php echo $use['id_use'];?>';" style="cursor:pointer; color: #3C8DBC;""><?php echo $use['usuario'];?></span>
+                <span class="description"><?php echo $lista['fecha'];?></span>
+              </div>
+            </div>
+      
+            <div class="box-body">
+              <p><?php echo $lista['contenido'];?></p>
+              <?php 
+              if($lista['imagenes'] != 0) {
+              ?>
+              <img src="publicaciones/<?php echo $lista['imagenes'];?>" width="30%" height="40%">
+              <?php
+            }
+            ?>
+            
+           </div>
+           </div>
+            
+
+     
+  
+
+	<?php
+  }
+
+    if($IncrimentNum<=0){}else {
+	echo "<a href=\"publicaciones.php?pag=".$IncrimentNum."\">Siguiente</a>";
+	}
+?>
