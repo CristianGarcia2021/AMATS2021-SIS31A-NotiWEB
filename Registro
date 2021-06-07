@@ -1,0 +1,119 @@
+<?php
+session_start();
+require "Conect/conectar.php";
+error_reporting(0);
+
+if(isset($_SESSION['usuario']))
+{
+  header("Location: index.php");
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Registrar</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a href=""><b>Noti</b>WEB</a>
+  </div>
+
+  <div class="register-box-body">
+    <p class="login-box-msg">Registrarme</p>
+
+    <form action="" method="post">
+      <div class="form-group has-feedback">
+        <input type="text" name="nombre" class="form-control" placeholder="Nombre Noticiero" value="<?php echo $_POST['nombre']; ?>" required>
+        <span class="glyphicon glyphicon-star form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="email" name="email" class="form-control" placeholder="Email Noticiero" value="<?php echo $_POST['email']; ?>" required>  
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="text" name="usuario" class="form-control" placeholder="Usuario Noticiero" value="<?php echo $_POST['usuario']; ?>" required>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" name="contrasena" class="form-control" placeholder="Contraseña" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" name="repcontrasena" class="form-control" placeholder="Repita la contraseña" required>
+        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-10">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox" name="check" required> Acepto todos los <a href="#">términos y condiciones</a>
+            </label>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <button type="submit" name="registrar" class="btn btn-primary btn-block btn-flat">Registrarme</button>
+        </div>
+      </div>
+    </form>
+
+
+    <?php
+    if(isset($_POST['registrar'])) {
+
+      $nombre = $_POST['nombre'];
+      $email = $_POST['email'];
+      $usuario = $_POST['usuario'];
+      $contrasena = md5($_POST['contrasena']);
+      $repcontrasena = md5($_POST['repcontrasena']);
+
+      $comprobarusuario = mysqli_num_rows(mysqli_query($con,"SELECT usuario FROM usuarios WHERE usuario = '$usuario'"));
+
+      $comprobaremail = mysqli_num_rows(mysqli_query($con,"SELECT email FROM usuarios WHERE email = '$email'"));
+      
+      
+      if($comprobarusuario >= 1) { echo "El nombre de usuario está en uso, por favor escoja otro";} else {
+        if($comprobaremail >= 1) {  echo"El email ya está en uso por favor escoja otro o verifique si tiene una cuenta";} else {
+          if($contrasena != $repcontrasena) { echo "<p>Las contraseñas no coinciden</p>";}else {
+
+            $fecha = date("d/m/y");
+
+          $insertar = mysqli_query($con,"INSERT INTO usuarios (nombre,email,usuario,contraseña, fecha_reg, imagen) VALUES ('$nombre','$email','$usuario','$contrasena','$fecha','defecto.jpg')");
+
+
+          if($insertar) {
+           echo "Felicidades se ha registrado correctamente"; 
+
+           header("Refresh: 2; url=login.php");
+
+          }
+
+         }
+        }
+      }
+    }
+?>
+  
+
+
+<br>
+    <a href="login.php" class="text-center">Ingresar</a>
+  </div>
+</div>
+
+
+
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="plugins/iCheck/icheck.min.js"></script>
+
+</body>
+</html>
