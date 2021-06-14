@@ -1,0 +1,86 @@
+<?php
+require "Conect/conectar.php";
+
+error_reporting(0);
+
+?>
+
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+
+<link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+
+<link rel="stylesheet" type="text/css" href="css/component.css" />
+  
+
+
+<div class="scroll">
+        
+          </div>
+            <script>
+            $(document).ready(function() {
+              $('.scroll').jscroll({
+                loadingHtml: '<img src="images/invisible.png" alt="Loading" />'
+            });
+            });
+            </script>
+        </div>
+        <a href="Noticieros.php">Regresar</a>
+  <?php
+  $CantidadMostrar=5;
+  $compag = (int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
+	$TotalReg = mysqli_query($con,"SELECT * FROM publicaciones");
+	$totalr = mysqli_num_rows($TotalReg);
+	$TotalRegistro  =ceil($totalr/$CantidadMostrar);
+	$IncrimentNum =(($compag +1)<=$TotalRegistro)?($compag +1):0;
+
+    $id = $_POST['ide'];
+
+	$consultavistas = "SELECT *  FROM usuarios AS u INNER JOIN publicaciones AS p ON  u.id_use = p.usuario WHERE u.id_use=$id";
+
+  $consulta=mysqli_query($con,$consultavistas);
+	while ($lista=mysqli_fetch_array($consulta)) {
+
+		$userid = $id;
+
+		$usuariob = mysqli_query($con,"SELECT * FROM usuarios WHERE id_use = '$userid'");
+    $use = mysqli_fetch_array($usuariob);
+
+    $fotos = mysqli_query($con,"SELECT * FROM imagenes WHERE publicaciones = '$lista[id_pub]'");
+    $fot = mysqli_fetch_array($fotos);
+	?>
+          <div class="box box-widget">
+            <div class="box-header with-border">
+              <div class="user-block">
+                <img class="img-circle" src="Perfil/<?php echo $use['imagen']; ?>" alt="User Image">
+                <span class="description"  style="cursor:pointer; color: #3C8DBC;""><?php echo $use['usuario'];?></span>
+                <span class="description"><?php echo $lista['fecha'];?></span>
+              </div>
+            </div>
+      
+            <div class="box-body">
+              <p><?php echo $lista['contenido'];?></p>
+              <?php 
+              if($lista['imagenes'] != 0) {
+              ?>
+              <img src="publicaciones/<?php echo $lista['imagenes'];?>" width="30%" height="40%">
+              <?php
+            }
+            ?>
+            
+           </div>
+           </div>
+            
+
+     
+  
+
+	<?php
+  }
+
+?>
