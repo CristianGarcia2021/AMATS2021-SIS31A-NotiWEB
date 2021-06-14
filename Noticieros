@@ -1,0 +1,183 @@
+<?php
+require "Conect/conectar.php";
+error_reporting(0);
+?>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticieros</title> 
+<style>
+  body{
+    user-select: none;
+  }
+.regresar{
+  background: black;
+  color: white;
+  font-size: 15px;
+  text-decoration:none;
+  border-radius: 100%;
+  margin-top: 12px;
+  margin-right: 12px;
+  margin-left: 15px;
+  padding: 13px 20px;
+  float: left;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+input[type="submit"]{
+   border:none;
+   background: black;
+   color: white;
+   padding: 20px 50px;
+   cursor: pointer;
+   margin-top: 12px;
+}
+input[type="search"]{
+   border:none;
+   color: black;
+   padding: 18px 48px;
+   cursor: pointer;
+   float: right;
+   margin-top: 12px;
+}
+.cont{
+  background-color: rgba(1, 1, 1, 0.7);
+  width: 49%;
+  float: left;
+}
+.cont1{
+  background-color: rgba(1, 1, 1, 0.7);
+  width: 49%;
+  float: right;
+}
+body{
+  background-color: rgb(3, 37, 37);
+  user-select:none;
+}
+.ides{
+  display:none;
+}
+h3{
+  color: white;
+  text-align:center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.list{
+  background-color: rgb(3, 37, 37);
+  border: none;
+  padding: 12px 18px;
+  color:white;
+  text-align:center;
+  width: 100%;
+  margin-top: 7px;
+}
+.hr1{
+  width: 30%;
+  float: left;
+}
+.hr2{
+  width: 30%;
+  float: right;
+}
+img{
+  width: 30%;
+  border-radius: 100%;
+}
+li{
+  background: rgb(140, 70, 0);
+  float:left;
+  width: 42%;
+  text-align:center;
+  margin: 12px 12px;
+  height: 40%;
+}
+.he{
+  background: rgb(140, 70, 0);
+  height: 13%;
+}
+</style>
+</head>
+<body>
+
+<div class="he">
+<a class="regresar" href="index.php"><b><</b></a>
+<form method="post">
+  <input type="search" name="bus" id="" required placeholder="Digite nombre noticiero">
+  <input type="submit" value="Buscar" name="buscar">
+</form>
+</div>
+<br>
+<div class="cont">
+<div>
+<div class="heade"><br>
+<hr class="hr1">
+<h3>Últimos registrados</h3>
+<hr class="hr2"><br><br>
+</div>
+<div class="box-body no-padding">
+<ul class="users-list clearfix">
+
+<?php 
+
+ $noticieros = mysqli_query($con,"SELECT imagen,usuario,fecha_reg,id_use FROM usuarios order by id_use desc limit 100");
+
+ while($reg=mysqli_fetch_array($noticieros)) {
+ ?>
+ <li>
+ <form action="Ver.php" method="post">
+  <img src="Perfil/<?php echo $reg['imagen']; ?>" alt="User Image">
+  <input type="text" class="list" name="" id="" value="<?php echo ucwords($reg['usuario']); ?>" disabled>
+  <input type="text" class="ides" name="ide" id="" value="<?php echo $reg['id_use']; ?>">
+  <input type="text" class="list" name="" id="" value="<?php echo $reg['fecha_reg']; ?>" disabled>
+  <input type="submit" value="Ver Noticiero">
+</form>
+ <?php
+ }
+ ?>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div class="cont1">
+<div>
+<div class="heade"><br>
+<hr class="hr1">
+<h3>Resultados busqueda</h3>
+<hr class="hr2"><br><br>
+</div>
+<div class="box-body no-padding">
+<ul>
+
+<?php
+if (isset($_POST['buscar'])) {
+  $dato = $_POST['bus'];
+
+
+ $noticieros = mysqli_query($con,"SELECT imagen,usuario,fecha_reg,id_use FROM usuarios WHERE usuario LIKE '%$dato%'");
+
+ while($reg=mysqli_fetch_array($noticieros)) {
+ ?>
+ <li>
+ <form action="Ver.php" method="post">
+  <img src="Perfil/<?php echo $reg['imagen']; ?>" alt="User Image">
+  <input type="text" class="list" name="" id="" value="<?php echo ucwords($reg['usuario']); ?>" disabled>
+  <input type="text" class="ides" name="ide" id="" value="<?php echo $reg['id_use']; ?>">
+  <input type="text" class="list" name="" id="" value="<?php echo $reg['fecha_reg']; ?>" disabled>
+  <input type="submit" value="Ver Noticiero">
+</form>
+ <?php
+ }
+}
+ ?>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+</body>
+</html>
